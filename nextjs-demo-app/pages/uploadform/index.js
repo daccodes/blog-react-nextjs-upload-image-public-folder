@@ -3,6 +3,7 @@ import { useState } from "react";
 export default function UploadFormPage(props) {
   const [image, setImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
+  const [uploaded, setUploaded] = useState(false);
 
   const uploadToClient = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -13,14 +14,18 @@ export default function UploadFormPage(props) {
     }
   };
 
-  const uploadToServer = async (event) => {        
+  const uploadToServer = async (event) => {
     const body = new FormData();
     // console.log("file", image)
-    body.append("file", image);    
+    body.append("file", image);
     const response = await fetch("/api/upload", {
       method: "POST",
-      body
+      body,
     });
+    setUploaded(!uploaded);
+    setTimeout(() => {
+      setUploaded(!uploaded);
+    }, 4000);
   };
 
   return (
@@ -36,6 +41,7 @@ export default function UploadFormPage(props) {
         >
           Send to server
         </button>
+        {uploaded && <span>✔️</span>}
       </div>
     </div>
   );
